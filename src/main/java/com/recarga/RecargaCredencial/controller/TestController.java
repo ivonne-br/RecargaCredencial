@@ -11,4 +11,9 @@ public class TestController {
     public String ivonne() {
         return "Hola, soy Ivonne.<br>Integrante del equipo Feedback Amigo";
     }
+
+    @GetMapping("/javier")
+    public String javier() {
+        return "Hola, soy Ivonne.<br>Integrante del equipo Feedback Amigo";
+    }
 }
