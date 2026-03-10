@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS recarga_credencial;
 USE recarga_credencial;
 
 -- Tabla: Alumno
-CREATE TABLE IF NOT EXISTS Alumno (
+CREATE TABLE IF NOT EXISTS alumno (
     matricula VARCHAR(20) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     correo_institucional VARCHAR(100) UNIQUE NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS Alumno (
 );
 
 -- Tabla: Credencial
-CREATE TABLE IF NOT EXISTS Credencial (
+CREATE TABLE IF NOT EXISTS credencial (
     matricula VARCHAR(20) PRIMARY KEY,
     fecha_expedicion DATE NOT NULL,
     fecha_vencimiento DATE NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Credencial (
 );
 
 -- Tabla: Recarga
-CREATE TABLE IF NOT EXISTS Recarga (
+CREATE TABLE IF NOT EXISTS recarga (
     id_recarga INT AUTO_INCREMENT PRIMARY KEY,
     matricula VARCHAR(20) NOT NULL,
     fecha_recarga DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Recarga (
 );
 
 -- Tabla: Transaccion
-CREATE TABLE IF NOT EXISTS Transaccion (
+CREATE TABLE IF NOT EXISTS transaccion (
     id_transaccion INT AUTO_INCREMENT PRIMARY KEY,
     matricula VARCHAR(20) NOT NULL,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
