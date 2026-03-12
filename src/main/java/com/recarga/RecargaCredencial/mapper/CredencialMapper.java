@@ -18,6 +18,5 @@ public interface CredencialMapper {
     @Mapping(source = "matricula", target = "matricula")
         CredencialDTO toCredencialDTO (Credencial credencial);
 
-    @Mapping(target = "matricula", ignore = true)
-        Credencial toCredencialDTO(CredencialDTO credencialDTO);
+        Credencial toCredencial(CredencialDTO credencialDTO);
 }
