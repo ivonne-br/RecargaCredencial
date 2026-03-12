@@ -26,8 +26,8 @@ public class CrendencialController {
     }
 
     // Obtener credencial por id
-    @GetMapping("/credencial/{id}")
-    public CredencialDTO findById(@PathVariable String matricula){
+    @GetMapping("/credencial/{matricula}")
+    public CredencialDTO findById(@PathVariable("matricula") String matricula){
         return credencialService.findById(matricula)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Credencial no encontrada: " + matricula

@@ -49,7 +49,7 @@ public class CredencialServiceImpl implements CredencialService {
         return credencialRepository.findById(matricula)
                 .map(credencial -> {
                     CredencialDTO dto = credencialMapper.toCredencialDTO(credencial);
-                    alumnoRepository.findById(credencial.getMatricula())
+                    alumnoRepository.findById(matricula)
                             .map(alumnoMapper::toAlumnoDTO)
                             .ifPresent(dto::setAlumno);
                     return dto;
