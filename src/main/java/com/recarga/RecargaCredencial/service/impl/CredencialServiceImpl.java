@@ -48,12 +48,12 @@ public class CredencialServiceImpl implements CredencialService {
         //alumno.setCredencial(credencial);
 
         credencial  = credencialRepository.save(credencial);
-        return credencialMapper.toCredencialDTO(alumno);
+        return credencialMapper.toCredencialDTO(credencial);
     }
 
     @Override
     public void update(String matricula, CredencialDTO dto) {
-        Credencial credencial = credencialMapper.findById(matricula)
+        Credencial credencial = credencialRepository.findById(matricula)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credencial no encontrado: " + matricula));
         // Credencial
 

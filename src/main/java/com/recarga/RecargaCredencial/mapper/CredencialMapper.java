@@ -16,8 +16,8 @@ import java.util.Optional;
 public interface CredencialMapper {
 
     @Mapping(source = "matricula", target = "matricula")
-        CredencialDTO toDTO(Credencial credencial);
+        CredencialDTO toCredencialDTO (Credencial credencial);
 
     @Mapping(target = "matricula", ignore = true)
-        Credencial toEntity(CredencialDTO credencialDTO);
+        Credencial toCredencialDTO(CredencialDTO credencialDTO);
 }

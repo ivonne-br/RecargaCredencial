@@ -9,10 +9,10 @@ import org.mapstruct.Mapping;
 @Mapper(
         componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {CredencialMapper.class}
+        uses = {AlumnoMapper.class}
 )
 public interface AlumnoMapper {
-    @Mapping(source = "matricula", target = matricula)
+    @Mapping(source = "matricula", target = "matricula")
     AlumnoDTO toAlumnoDTO (Alumno alumno);
 
     @Mapping(target = "matricula", ignore = true)
