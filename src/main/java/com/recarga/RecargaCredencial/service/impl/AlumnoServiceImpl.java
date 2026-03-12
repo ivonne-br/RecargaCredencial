@@ -56,9 +56,15 @@ public class AlumnoServiceImpl implements AlumnoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Alumno no encontrado: " + matricula));
         // Credencial
 
-        alumno.setNombre(dto.getNombre());
-        alumno.setCorreoInstitucional(dto.getCorreoInstitucional());
-        alumno.setLicenciatura(alumno.getLicenciatura());
+        if (dto.getNombre() != null) {
+            alumno.setNombre(dto.getNombre());
+        }
+        if (dto.getCorreoInstitucional() != null) {
+            alumno.setCorreoInstitucional(dto.getCorreoInstitucional());
+        }
+        if (dto.getLicenciatura() != null) {
+            alumno.setLicenciatura(dto.getLicenciatura());
+        }
         alumnoRepository.save(alumno);
     }
 

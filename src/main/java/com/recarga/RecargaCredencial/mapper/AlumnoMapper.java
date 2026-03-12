@@ -15,6 +15,5 @@ public interface AlumnoMapper {
     @Mapping(source = "matricula", target = "matricula")
     AlumnoDTO toAlumnoDTO (Alumno alumno);
 
-    @Mapping(target = "matricula", ignore = true)
     Alumno toAlumno (AlumnoDTO alumnoDTO);
 }

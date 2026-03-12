@@ -22,8 +22,7 @@ public class Credencial {
     @Column(name = "saldo", nullable = false)
     private Double saldo;
 
-    @OneToOne
-    @JoinColumn(name = "matricula")
+    @Transient
     private Alumno alumno;
 
     public String getMatricula() {

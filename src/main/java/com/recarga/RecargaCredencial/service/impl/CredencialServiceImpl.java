@@ -4,7 +4,9 @@ import com.recarga.RecargaCredencial.dto.AlumnoDTO;
 import com.recarga.RecargaCredencial.dto.CredencialDTO;
 import com.recarga.RecargaCredencial.entity.Alumno;
 import com.recarga.RecargaCredencial.entity.Credencial;
+import com.recarga.RecargaCredencial.mapper.AlumnoMapper;
 import com.recarga.RecargaCredencial.mapper.CredencialMapper;
+import com.recarga.RecargaCredencial.repository.AlumnoRepository;
 import com.recarga.RecargaCredencial.repository.CredencialRepository;
 import com.recarga.RecargaCredencial.service.CredencialService;
 import org.springframework.http.HttpStatus;
@@ -20,22 +22,38 @@ public class CredencialServiceImpl implements CredencialService {
 
     private final CredencialRepository credencialRepository;
     private final CredencialMapper credencialMapper;
+    private final AlumnoRepository alumnoRepository;
+    private final AlumnoMapper alumnoMapper;
 
-    public CredencialServiceImpl(CredencialRepository credencialRepository, CredencialMapper credencialMapper){
+    public CredencialServiceImpl(CredencialRepository credencialRepository, CredencialMapper credencialMapper, AlumnoRepository alumnoRepository, AlumnoMapper alumnoMapper){
         this.credencialRepository = credencialRepository;
         this.credencialMapper = credencialMapper;
+        this.alumnoRepository = alumnoRepository;
+        this.alumnoMapper = alumnoMapper;
     }
     @Override
     public List<CredencialDTO> findAll(){
         return credencialRepository.findAll()
                 .stream()
-                .map(credencialMapper::toCredencialDTO)
+                .map(credencial -> {
+                    CredencialDTO dto = credencialMapper.toCredencialDTO(credencial);
+                    alumnoRepository.findById(credencial.getMatricula())
+                            .map(alumnoMapper::toAlumnoDTO)
+                            .ifPresent(dto::setAlumno);
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
     @Override
     public Optional<CredencialDTO> findById(String matricula) {
         return credencialRepository.findById(matricula)
-                .map(credencialMapper::toCredencialDTO);
+                .map(credencial -> {
+                    CredencialDTO dto = credencialMapper.toCredencialDTO(credencial);
+                    alumnoRepository.findById(matricula)
+                            .map(alumnoMapper::toAlumnoDTO)
+                            .ifPresent(dto::setAlumno);
+                    return dto;
+                });
     }
 
     @Override
@@ -44,11 +62,32 @@ public class CredencialServiceImpl implements CredencialService {
         //Credencial credencial = null;
         //if (dto.getCredencial() != null && dto.getCredencial().geteId_credencial (matricula)!!
 
-        Credencial credencial = credencialMapper.toCredencialDTO(dto);
-        //alumno.setCredencial(credencial);
+        String matricula = dto.getMatricula();
+        if (matricula == null && dto.getAlumno() != null) {
+            matricula = dto.getAlumno().getMatricula();
+        }
+        if (matricula == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "matricula es obligatoria para crear credencial");
+        }
 
-        credencial  = credencialRepository.save(credencial);
-        return credencialMapper.toCredencialDTO(credencial);
+        final String matriculaFinal = matricula;
+        Alumno alumno = alumnoRepository.findById(matriculaFinal)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Alumno no encontrado: " + matriculaFinal));
+        if (dto.getFechaExpedicion() == null || dto.getFechaVencimiento() == null || dto.getSaldo() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fechaExpedicion, fechaVencimiento y saldo son obligatorios");
+        }
+
+        Credencial credencial = new Credencial();
+        credencial.setMatricula(matricula);
+        credencial.setAlumno(alumno);
+        credencial.setFechaExpedicion(dto.getFechaExpedicion());
+        credencial.setFechaVencimiento(dto.getFechaVencimiento());
+        credencial.setSaldo(dto.getSaldo());
+
+        Credencial saved = credencialRepository.save(credencial);
+        CredencialDTO result = credencialMapper.toCredencialDTO(saved);
+        result.setAlumno(alumnoMapper.toAlumnoDTO(alumno));
+        return result;
     }
 
     @Override
@@ -57,9 +96,15 @@ public class CredencialServiceImpl implements CredencialService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credencial no encontrado: " + matricula));
         // Credencial
 
-        credencial.setFechaExpedicion(dto.getFechaExpedicion());
-        credencial.setFechaVencimiento(dto.getFechaVencimiento());
-        credencial.setSaldo(credencial.getSaldo());
+        if (dto.getFechaExpedicion() != null) {
+            credencial.setFechaExpedicion(dto.getFechaExpedicion());
+        }
+        if (dto.getFechaVencimiento() != null) {
+            credencial.setFechaVencimiento(dto.getFechaVencimiento());
+        }
+        if (dto.getSaldo() != null) {
+            credencial.setSaldo(dto.getSaldo());
+        }
         credencialRepository.save(credencial);
     }
 

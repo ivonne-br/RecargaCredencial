@@ -4,6 +4,7 @@ import com.recarga.RecargaCredencial.dto.AlumnoDTO;
 import com.recarga.RecargaCredencial.dto.CredencialDTO;
 import com.recarga.RecargaCredencial.service.CredencialService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,8 +26,8 @@ public class CrendencialController {
     }
 
     // Obtener credencial por id
-    @GetMapping("/credencial/{id}")
-    public CredencialDTO findById(@PathVariable String matricula){
+    @GetMapping("/credencial/{matricula}")
+    public CredencialDTO findById(@PathVariable("matricula") String matricula){
         return credencialService.findById(matricula)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Credencial no encontrada: " + matricula
@@ -40,16 +41,18 @@ public class CrendencialController {
 
 
     // Actualizar credencial
-    @PutMapping("/alumno/{matricula}")
-    public void update(@PathVariable String matricula, @RequestBody CredencialDTO dto){
+    @PutMapping("/credencial/{matricula}")
+    public ResponseEntity<String> update(@PathVariable String matricula, @RequestBody CredencialDTO dto){
         credencialService.update(matricula,dto);
+        return ResponseEntity.ok("Credencial actualizada correctamente: " + matricula);
     }
 
 
     // Eliminar por id
     @DeleteMapping("/credencial/{matricula}")
-    public void deleteById(@PathVariable String matricula){
+    public ResponseEntity<String> deleteById(@PathVariable String matricula){
         credencialService.deleteById(matricula);
+        return ResponseEntity.ok("Credencial eliminada correctamente: " + matricula);
     }
 
 
