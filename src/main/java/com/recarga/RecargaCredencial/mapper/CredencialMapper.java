@@ -1,20 +1,23 @@
 package com.recarga.RecargaCredencial.mapper;
 
-import com.recarga.RecargaCredencial.dto.AlumnoDTO;
-import com.recarga.RecargaCredencial.entity.Alumno;
+import com.recarga.RecargaCredencial.dto.CredencialDTO;
+import com.recarga.RecargaCredencial.entity.Credencial;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Optional;
+
 @Mapper(
         componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {AlumnoMapper.class}
+        uses = {CredencialMapper.class}
 )
-public interface AlumnoMapper {
+public interface CredencialMapper {
+
     @Mapping(source = "matricula", target = "matricula")
-    AlumnoDTO toAlumnoDTO (Alumno alumno);
+        CredencialDTO toCredencialDTO (Credencial credencial);
 
     @Mapping(target = "matricula", ignore = true)
-    Alumno toAlumno (AlumnoDTO alumnoDTO);
+        Credencial toCredencialDTO(CredencialDTO credencialDTO);
 }
